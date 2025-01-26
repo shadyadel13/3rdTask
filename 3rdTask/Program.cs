@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace LibraryManagementSystem
 {
-    // Book class
+    
     public class Book
     {
         public string Title { get; set; }
@@ -92,7 +92,7 @@ namespace LibraryManagementSystem
         }
     }
 
-    // Main class to test the functionality
+    
     class Program
     {
         static void Main(string[] args)
