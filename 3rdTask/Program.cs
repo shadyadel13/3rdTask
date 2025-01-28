@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LibraryManagementSystem
+namespace ThirdTask
 {
     class Program
     {
