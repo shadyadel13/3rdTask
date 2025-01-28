@@ -1,98 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LibraryManagementSystem
 {
-    
-    public class Book
-    {
-        public string Title { get; set; }
-        public string Author { get; set; }
-        public string ISBN { get; set; }
-        public bool IsAvailable { get; set; }
-
-        public Book(string title, string author, string isbn)
-        {
-            Title = title;
-            Author = author;
-            ISBN = isbn;
-            IsAvailable = true; 
-        }
-    }
-
-    public class Library
-    {
-        private List<Book> books;
-
-        public Library()
-        {
-            books = new List<Book>();
-        }
-
-        public void AddBook(Book book)
-        {
-            books.Add(book);
-            Console.WriteLine($"Book '{book.Title}' added to the library.");
-        }
-
-       
-        public Book SearchBook(string searchTerm)
-        {
-            for (int i = 0; i < books.Count; i++)
-            {
-                if (books[i].Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-                    books[i].Author.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                {
-                    return books[i];
-                }
-            }
-            return null;
-        }
-
-        public void BorrowBook(string searchTerm)
-        {
-            Book book = SearchBook(searchTerm);
-            if (book != null)
-            {
-                if (book.IsAvailable)
-                {
-                    book.IsAvailable = false;
-                    Console.WriteLine($"You have borrowed '{book.Title}'.");
-                }
-                else
-                {
-                    Console.WriteLine($"Sorry, '{book.Title}' is currently not available.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Book not found.");
-            }
-        }
-
-        public void ReturnBook(string searchTerm)
-        {
-            Book book = SearchBook(searchTerm);
-            if (book != null)
-            {
-                if (!book.IsAvailable)
-                {
-                    book.IsAvailable = true;
-                    Console.WriteLine($"You have returned '{book.Title}'.");
-                }
-                else
-                {
-                    Console.WriteLine($"The book '{book.Title}' was not borrowed.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Book not found.");
-            }
-        }
-    }
-
-    
     class Program
     {
         static void Main(string[] args)
@@ -103,16 +14,106 @@ namespace LibraryManagementSystem
             library.AddBook(new Book("To Kill a Mockingbird", "Harper Lee", "9780061120084"));
             library.AddBook(new Book("1984", "George Orwell", "9780451524935"));
 
-            Console.WriteLine("\nSearching and borrowing books...");
+            Console.WriteLine("Searching and borrowing books...");
             library.BorrowBook("Gatsby");
             library.BorrowBook("1984");
-            library.BorrowBook("Harry Potter"); 
+            library.BorrowBook("Harry Potter");
 
             Console.WriteLine("\nReturning books...");
             library.ReturnBook("Gatsby");
-            library.ReturnBook("Harry Potter"); 
+            library.ReturnBook("Harry Potter");
 
             Console.ReadLine();
+        }
+    }
+
+    public class Book
+    {
+        public string Title { get; set; }
+        public string Author { get; set; }
+        public string ISBN { get; set; }
+        public bool Availability { get; set; }
+
+
+        public Book(string title, string author, string isbn)
+        {
+            Title = title;
+            Author = author;
+            ISBN = isbn;
+            Availability = true;
+        }
+    }
+
+    public class Library
+    {
+        private List<Book> books;
+
+
+        public Library()
+        {
+            books = new List<Book>();
+        }
+
+
+        public void AddBook(Book book)
+        {
+            books.Add(book);
+            Console.WriteLine($"Added \"{book.Title}\" by {book.Author} to the library.");
+        }
+
+
+        public Book SearchBook(string keyword)
+        {
+            keyword = keyword.ToLower();
+
+            for (int i = 0; i < books.Count; i++)
+            {
+                var book = books[i];
+
+                if (book.Title.ToLower().Contains(keyword) || book.Author.ToLower().Contains(keyword))
+                {
+                    return book;
+                }
+            }
+            return null;
+        }
+
+
+
+        public void BorrowBook(string title)
+        {
+            Book book = SearchBook(title);
+            if (book == null)
+            {
+                Console.WriteLine($"Book \"{title}\" is not found in the library.");
+            }
+            else if (!book.Availability)
+            {
+                Console.WriteLine($"Book \"{book.Title}\" is already borrowed.");
+            }
+            else
+            {
+                book.Availability = false;
+                Console.WriteLine($"You have borrowed \"{book.Title}\" by {book.Author}.");
+            }
+        }
+
+        public void ReturnBook(string title)
+        {
+            Book book = SearchBook(title);
+            if (book == null)
+            {
+                Console.WriteLine($"Book \"{title}\" is not found in the library.");
+            }
+            else if (book.Availability)
+            {
+                Console.WriteLine($"Book \"{book.Title}\" was not borrowed.");
+            }
+            else
+            {
+                book.Availability = true;
+                Console.WriteLine($"You have returned \"{book.Title}\" by {book.Author}.");
+            }
         }
     }
 }
